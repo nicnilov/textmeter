@@ -1,9 +1,11 @@
 package com.nicnilov.textmeter.ngrams;
 
+import com.nicnilov.textmeter.ngrams.storage.LineFormatException;
 import com.nicnilov.textmeter.ngrams.storage.NgramStorage;
 import com.nicnilov.textmeter.ngrams.storage.NgramStorageFactory;
 import com.nicnilov.textmeter.ngrams.storage.NgramStorageStrategy;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -17,11 +19,11 @@ public class Ngram {
 
     protected Ngram(NgramType ngramType, NgramStorageStrategy ngramStorageStrategy) {
         this.ngramType = ngramType;
-        this.ngramStorage = NgramStorageFactory.get(ngramStorageStrategy);
+        this.ngramStorage = NgramStorageFactory.get(ngramType, ngramStorageStrategy);
     }
 
-    protected Ngram load(InputStream inputStream) {
-        this.ngramStorage.load(this.ngramType, inputStream);
+    protected Ngram load(InputStream inputStream) throws IOException, LineFormatException {
+        this.ngramStorage.load(inputStream);
         return this;
     }
 

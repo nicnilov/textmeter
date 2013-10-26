@@ -1,6 +1,7 @@
 package com.nicnilov.textmeter.ngrams.storage;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.nicnilov.textmeter.NotImplementedException;
+import com.nicnilov.textmeter.ngrams.NgramType;
 
 /**
  * Created as part of jmc project
@@ -8,16 +9,17 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class NgramStorageFactory {
 
-    public static NgramStorage get(NgramStorageStrategy ngramStorageStrategy) {
+    public static NgramStorage get(NgramType ngramType, NgramStorageStrategy ngramStorageStrategy) {
         NgramStorage ngramStorage;
         switch (ngramStorageStrategy) {
             case HASHMAP: {
-                ngramStorage = new HashMapStorage();
+                ngramStorage = new HashMapStorage(ngramType);
                 break;
             }
-//            case TREEMAP: {
-//                break;
-//            }
+            case TREEMAP: {
+                ngramStorage = new TreeMapStorage(ngramType);
+                break;
+            }
 //            case ARRAY: {
 //                break;
 //            }

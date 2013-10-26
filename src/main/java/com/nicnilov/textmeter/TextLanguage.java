@@ -3,10 +3,12 @@ package com.nicnilov.textmeter;
 import com.nicnilov.textmeter.ngrams.Ngram;
 import com.nicnilov.textmeter.ngrams.NgramBuilder;
 import com.nicnilov.textmeter.ngrams.NgramType;
+import com.nicnilov.textmeter.ngrams.storage.LineFormatException;
 import com.nicnilov.textmeter.ngrams.storage.NgramStorageStrategy;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Locale;
 
 /**
@@ -15,7 +17,7 @@ import java.util.Locale;
  */
 public class TextLanguage {
 
-    private HashMap<NgramType, Ngram> ngrams = new HashMap<>();
+    private EnumMap<NgramType, Ngram> ngrams = new EnumMap<>(NgramType.class);
     private Locale locale;
 
     public TextLanguage(Locale locale) {
@@ -26,11 +28,10 @@ public class TextLanguage {
         if (ngrams.containsKey(ngramType)) {
             return ngrams.get(ngramType);
         }
-        throw new RuntimeException();
+        throw new NotInitializedException(String.format("Ngrams of type %s have not been loaded", ngramType));
     }
 
-    public Ngram loadNgram(NgramType ngramType, InputStream inputStream, NgramStorageStrategy ngramStorageStrategy) {
-        releaseNgram(ngramType);
+    public Ngram getNgram(NgramType ngramType, InputStream inputStream, NgramStorageStrategy ngramStorageStrategy) throws IOException, LineFormatException {
         Ngram ngram = NgramBuilder.build(ngramType, inputStream, ngramStorageStrategy);
         ngrams.put(ngramType, ngram);
         return ngram;
