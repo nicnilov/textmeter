@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.AbstractMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created as part of jmc project
@@ -32,9 +33,22 @@ public abstract class NgramStorage {
     public void load(InputStream inputStream) throws LineFormatException, IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         internalLoad(br);
+        calculateLogFrequences();
+    }
+
+    protected void calculateLogFrequences() {
+        for (Map.Entry<String, Float> entry : storage.entrySet()) {
+            entry.setValue(new Float(Math.log10(entry.getValue() / totalFreq)));
+        }
     }
 
     protected void internalLoad(BufferedReader br) throws LineFormatException, IOException {
+        if (br == null) throw new IllegalArgumentException();
+
+        ngramsCount = 0;
+        totalFreq = 0;
+        floor = 0;
+
         final String lineRegex = String.format("^[a-zA-Z]{%d}\\s\\d+$", this.getNgramType().length());
         int lineNo = 0;
 
@@ -50,7 +64,9 @@ public abstract class NgramStorage {
             storage.put(line.substring(0, this.getNgramType().length()), freq);
             totalFreq += freq;
         }
-        floor = Math.log10(1/totalFreq);
+        if (totalFreq != 0) {
+            floor = Math.log10(1/totalFreq);
+        }
         ngramsCount = lineNo;
     }
 
