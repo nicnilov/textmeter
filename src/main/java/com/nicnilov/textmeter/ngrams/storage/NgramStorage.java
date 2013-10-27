@@ -53,7 +53,7 @@ public abstract class NgramStorage {
 
         storage.clear();
 
-        final String lineRegex = String.format("^[a-zA-Z]{%d}\\s\\d+$", this.getNgramType().length());
+        final String lineRegex = String.format("^[A-ZА-ЯЁ]{%d}\\s\\d+$", this.getNgramType().length());
         int lineNo = 0;
 
         String line;
@@ -83,7 +83,7 @@ public abstract class NgramStorage {
 
         int cnt = text.length() - ngramType.length();
         for (int i = 0; i <= cnt; i++) {
-            score = storage.get(text.substring(i, ngramType.length() + i).toUpperCase(Locale.ENGLISH));
+            score = storage.get(text.substring(i, ngramType.length() + i));
             if (score == null) {
                 result += floor;
             } else {
