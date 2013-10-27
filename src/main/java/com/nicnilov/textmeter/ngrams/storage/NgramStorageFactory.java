@@ -9,11 +9,11 @@ import com.nicnilov.textmeter.ngrams.NgramType;
  */
 public class NgramStorageFactory {
 
-    public static NgramStorage get(NgramType ngramType, NgramStorageStrategy ngramStorageStrategy) {
+    public static NgramStorage get(NgramType ngramType, NgramStorageStrategy ngramStorageStrategy, int sizeHint) {
         NgramStorage ngramStorage;
         switch (ngramStorageStrategy) {
             case HASHMAP: {
-                ngramStorage = new HashMapStorage(ngramType);
+                ngramStorage = new HashMapStorage(ngramType, sizeHint);
                 break;
             }
             case TREEMAP: {

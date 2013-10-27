@@ -14,10 +14,24 @@ public class TextMeter
     public TextMeter() {
     }
 
-    public TextMeter addLanguage(String language) {
+    public TextLanguage createTextLanguage(final String language) {
+        if ((language == null) || (language.length() == 0)) throw new IllegalArgumentException();
 
-        return this;
+        TextLanguage tl = new TextLanguage(language);
+        textLanguages.put(language, tl);
+        return tl;
     }
 
+    public TextLanguage get(final String language) {
+        return textLanguages.get(language);
+    }
+
+    public void release(final String language) {
+        textLanguages.remove(language);
+    }
+
+    public void releaseAll() {
+        textLanguages.clear();
+    }
 
 }

@@ -2,10 +2,6 @@ package com.nicnilov.textmeter.ngrams.storage;
 
 import com.nicnilov.textmeter.ngrams.NgramType;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 
 /**
@@ -14,9 +10,9 @@ import java.util.HashMap;
  */
 public class HashMapStorage extends NgramStorage {
 
-    public HashMapStorage(NgramType ngramType) {
+    public HashMapStorage(NgramType ngramType, int sizeHint) {
         super(ngramType);
-        this.storage = new HashMap<>();
+        this.storage = new HashMap<>(sizeHint < DEFAULT_SIZE_HINT ? DEFAULT_SIZE_HINT : sizeHint);
     }
 
 }

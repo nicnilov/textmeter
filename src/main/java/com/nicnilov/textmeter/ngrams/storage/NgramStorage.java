@@ -17,6 +17,8 @@ import java.util.Map;
  */
 public abstract class NgramStorage {
 
+    protected static int DEFAULT_SIZE_HINT = 16;
+
     private NgramType ngramType;
     private long ngramsCount = 0;
     private double totalFreq = 0;
@@ -48,6 +50,8 @@ public abstract class NgramStorage {
         ngramsCount = 0;
         totalFreq = 0;
         floor = 0;
+
+        storage.clear();
 
         final String lineRegex = String.format("^[a-zA-Z]{%d}\\s\\d+$", this.getNgramType().length());
         int lineNo = 0;

@@ -17,14 +17,30 @@ public class Ngram {
     private NgramType ngramType;
     private NgramStorage ngramStorage;
 
-    protected Ngram(NgramType ngramType, NgramStorageStrategy ngramStorageStrategy) {
+    protected Ngram(NgramType ngramType, NgramStorageStrategy ngramStorageStrategy, int sizeHint) {
         this.ngramType = ngramType;
-        this.ngramStorage = NgramStorageFactory.get(ngramType, ngramStorageStrategy);
+        this.ngramStorage = NgramStorageFactory.get(ngramType, ngramStorageStrategy, sizeHint);
     }
 
     protected Ngram load(InputStream inputStream) throws IOException, LineFormatException {
         this.ngramStorage.load(inputStream);
         return this;
+    }
+
+    public double score(final String text) {
+        return this.ngramStorage.score(text);
+    }
+
+    public long size() {
+        return this.ngramStorage.ngramsCount();
+    }
+
+    public double totalFreq() {
+        return this.ngramStorage.totalFreq();
+    }
+
+    public double floor() {
+        return this.ngramStorage.floor();
     }
 
 }
