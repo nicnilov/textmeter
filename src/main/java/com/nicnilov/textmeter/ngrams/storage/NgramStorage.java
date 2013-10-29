@@ -3,12 +3,8 @@ package com.nicnilov.textmeter.ngrams.storage;
 import com.nicnilov.textmeter.NotInitializedException;
 import com.nicnilov.textmeter.ngrams.NgramType;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.AbstractMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -21,7 +17,7 @@ public abstract class NgramStorage {
 
     private NgramType ngramType;
     private long ngramsCount = 0;
-    private double totalFreq = 0;
+    private double totalNgrams = 0;
     private double floor = 0;
 
     protected AbstractMap<String, Float> storage;
@@ -36,19 +32,34 @@ public abstract class NgramStorage {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         internalLoad(br);
         calculateLogFrequences();
+
+//        if (ngramType == NgramType.QUADGRAM) {
+//            dumpNgrams();
+//        }
+
     }
 
     protected void calculateLogFrequences() {
         for (Map.Entry<String, Float> entry : storage.entrySet()) {
-            entry.setValue(new Float(Math.log10(entry.getValue() / totalFreq)));
+            entry.setValue(new Float(Math.log10(entry.getValue() / totalNgrams)));
         }
+    }
+
+    public void dumpNgrams() throws FileNotFoundException, UnsupportedEncodingException {
+        PrintWriter pw = new PrintWriter("d:/dump.txt", "UTF-8");
+
+        for (Map.Entry<String, Float> entry : storage.entrySet()) {
+            pw.println(String.format("%s: %.5f", entry.getKey(), entry.getValue()));
+        }
+
+        pw.close();
     }
 
     protected void internalLoad(BufferedReader br) throws LineFormatException, IOException {
         if (br == null) throw new IllegalArgumentException();
 
         ngramsCount = 0;
-        totalFreq = 0;
+        totalNgrams = 0;
         floor = 0;
 
         storage.clear();
@@ -58,18 +69,18 @@ public abstract class NgramStorage {
 
         String line;
         int freqStart = this.getNgramType().length() + 1;
-        float freq;
+        float ngramFrequency;
         while ((line = br.readLine()) != null) {
             lineNo++;
             if (!line.matches(lineRegex)) {
                 throw new LineFormatException(String.format("Ngram resource line %d doesn't match pattern \"%s\"", lineNo, lineRegex));
             }
-            freq = Float.parseFloat(line.substring(freqStart, line.length()));
-            storage.put(line.substring(0, this.getNgramType().length()), freq);
-            totalFreq += freq;
+            ngramFrequency = Float.parseFloat(line.substring(freqStart, line.length()));
+            storage.put(line.substring(0, this.getNgramType().length()), ngramFrequency);
+            totalNgrams += ngramFrequency;
         }
-        if (totalFreq != 0) {
-            floor = Math.log10(1/totalFreq);
+        if (totalNgrams != 0) {
+            floor = Math.log10(0.01 / totalNgrams);
         }
         ngramsCount = lineNo;
     }
@@ -102,8 +113,8 @@ public abstract class NgramStorage {
         return ngramsCount;
     }
 
-    public double totalFreq() {
-        return totalFreq;
+    public double totalNgrams() {
+        return totalNgrams;
     }
 
     public double floor() {

@@ -54,7 +54,7 @@ public class TextMeterTest extends TestCase {
     public void setUp() throws Exception {
         textMeter = new TextMeter();
         textMeter.createTextLanguage("en");
-        textMeter.createTextLanguage("ru");
+        //textMeter.createTextLanguage("ru");
 
         TextLanguage en = textMeter.get("en");
         long mark = System.currentTimeMillis();
@@ -65,13 +65,13 @@ public class TextMeterTest extends TestCase {
         en.getNgram(NgramType.QUINTGRAM, loadResource(EN_QUINTGRAMS), NgramStorageStrategy.TREEMAP, 4354915);
         System.out.println(String.format("en finished: %d msec", System.currentTimeMillis() - mark));
 
-        TextLanguage ru = textMeter.get("ru");
-        mark = System.currentTimeMillis();
-        ru.getNgram(NgramType.UNIGRAM, loadResource(RU_UNIGRAMS), NgramStorageStrategy.TREEMAP, 33);
-        ru.getNgram(NgramType.BIGRAM, loadResource(RU_BIGRAMS), NgramStorageStrategy.TREEMAP, 1085);
-        ru.getNgram(NgramType.TRIGRAM, loadResource(RU_TRIGRAMS), NgramStorageStrategy.TREEMAP, 29913);
-        ru.getNgram(NgramType.QUADGRAM, loadResource(RU_QUADGRAMS), NgramStorageStrategy.TREEMAP, 440609);
-        System.out.println(String.format("ru finished: %d msec", System.currentTimeMillis() - mark));
+//        TextLanguage ru = textMeter.get("ru");
+//        mark = System.currentTimeMillis();
+//        ru.getNgram(NgramType.UNIGRAM, loadResource(RU_UNIGRAMS), NgramStorageStrategy.TREEMAP, 33);
+//        ru.getNgram(NgramType.BIGRAM, loadResource(RU_BIGRAMS), NgramStorageStrategy.TREEMAP, 1085);
+//        ru.getNgram(NgramType.TRIGRAM, loadResource(RU_TRIGRAMS), NgramStorageStrategy.TREEMAP, 29913);
+//        ru.getNgram(NgramType.QUADGRAM, loadResource(RU_QUADGRAMS), NgramStorageStrategy.TREEMAP, 440609);
+//        System.out.println(String.format("ru finished: %d msec", System.currentTimeMillis() - mark));
     }
 
     public void tearDown() {
@@ -92,16 +92,17 @@ public class TextMeterTest extends TestCase {
         String testString = new String(testArray);
         textScore = textMeter.get("en").score(testString);
         System.out.println("en-based score for non-natural text: " + textScore);
+        System.out.println(String.format("%s floor: %.7f number: %.0f", NgramType.QUADGRAM, textMeter.get("en").getNgram(NgramType.QUADGRAM).floor(), textMeter.get("en").getNgram(NgramType.QUADGRAM).totalFreq()));
 
 
-        textScore = textMeter.get("ru").score(EN_TEXT.toUpperCase(Locale.ENGLISH));
-        System.out.println("ru-based score for english text: " + textScore);
-
-        textScore = textMeter.get("ru").score(RU_TEXT.toUpperCase());
-        System.out.println("ru-based score for russian text: " + textScore);
-
-        textScore = textMeter.get("ru").score(testString);
-        System.out.println("ru-based score for non-natural text: " + textScore);
+//        textScore = textMeter.get("ru").score(EN_TEXT.toUpperCase(Locale.ENGLISH));
+//        System.out.println("ru-based score for english text: " + textScore);
+//
+//        textScore = textMeter.get("ru").score(RU_TEXT.toUpperCase());
+//        System.out.println("ru-based score for russian text: " + textScore);
+//
+//        textScore = textMeter.get("ru").score(testString);
+//        System.out.println("ru-based score for non-natural text: " + textScore);
 
     }
 

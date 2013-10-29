@@ -36,7 +36,7 @@ public class Ngram {
     }
 
     public double totalFreq() {
-        return this.ngramStorage.totalFreq();
+        return this.ngramStorage.totalNgrams();
     }
 
     public double floor() {
