@@ -85,23 +85,29 @@ public abstract class NgramStorage {
         ngramsCount = lineNo;
     }
 
-    public double score(final String text) {
+    public ScoreStats score(final String text) {
         if ((text == null) || (text.length() < ngramType.length())) throw new IllegalArgumentException();
         if (storage == null) { throw new NotInitializedException(); }
 
-        double result = 0;
-        Float score;
+        ScoreStats scoreStats = new ScoreStats();
+        Float ngramScore;
 
         int cnt = text.length() - ngramType.length();
+        scoreStats.ngramsTotal = cnt + 1;
+
         for (int i = 0; i <= cnt; i++) {
-            score = storage.get(text.substring(i, ngramType.length() + i));
-            if (score == null) {
-                result += floor;
+            ngramScore = storage.get(text.substring(i, ngramType.length() + i));
+            if (ngramScore == null) {
+                scoreStats.score += floor;
             } else {
-                result += score;
+                scoreStats.ngramsFound++;
+                scoreStats.score += ngramScore;
             }
         }
-        return result;
+
+        scoreStats.maxScore = floor * scoreStats.ngramsFound;
+        scoreStats.minScore = floor * scoreStats.ngramsTotal;
+        return scoreStats;
     }
 
 
@@ -119,5 +125,38 @@ public abstract class NgramStorage {
 
     public double floor() {
         return floor;
+    }
+
+    /**
+     * Created as part of jmc project
+     * by Nic Nilov on 30.10.13 at 23:41
+     */
+    public static class ScoreStats {
+        private double score;
+        private double minScore;
+        private double maxScore;
+        private double ngramsTotal;
+        private double ngramsFound;
+
+        public double getScore() {
+            return score;
+        }
+
+        public double getMinScore() {
+            return minScore;
+        }
+
+        public double getMaxScore() {
+            return maxScore;
+        }
+
+        public double getNgramsTotal() {
+            return ngramsTotal;
+        }
+
+        public double getNgramsFound() {
+            return ngramsFound;
+        }
+
     }
 }

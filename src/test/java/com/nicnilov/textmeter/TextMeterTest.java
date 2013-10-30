@@ -81,17 +81,17 @@ public class TextMeterTest extends TestCase {
 
     public void testTextScore() throws Exception {
         TextScore textScore = textMeter.get("en").score(EN_TEXT.toUpperCase(Locale.ENGLISH));
-        System.out.println("en-based score for english text: " + textScore);
+        System.out.println("en-based score for english text:\n" + textScore);
 
         textScore = textMeter.get("en").score(RU_TEXT.toUpperCase());
-        System.out.println("en-based score for russian text: " + textScore);
+        System.out.println("en-based score for russian text:\n" + textScore);
 
         char[] testArray = new char[2048];
         Arrays.fill(testArray, 'A');
 
         String testString = new String(testArray);
         textScore = textMeter.get("en").score(testString);
-        System.out.println("en-based score for non-natural text: " + textScore);
+        System.out.println("en-based score for non-natural text:\n" + textScore);
         System.out.println(String.format("%s floor: %.7f number: %.0f", NgramType.QUADGRAM, textMeter.get("en").getNgram(NgramType.QUADGRAM).floor(), textMeter.get("en").getNgram(NgramType.QUADGRAM).totalFreq()));
 
 

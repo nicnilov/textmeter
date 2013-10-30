@@ -27,7 +27,7 @@ public class Ngram {
         return this;
     }
 
-    public double score(final String text) {
+    public NgramStorage.ScoreStats score(final String text) {
         return this.ngramStorage.score(text);
     }
 

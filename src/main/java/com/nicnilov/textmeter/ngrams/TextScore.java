@@ -1,5 +1,7 @@
 package com.nicnilov.textmeter.ngrams;
 
+import com.nicnilov.textmeter.ngrams.storage.NgramStorage;
+
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -9,9 +11,9 @@ import java.util.Map;
  */
 public class TextScore {
 
-    private EnumMap<NgramType, Double> ngramScores = new EnumMap<>(NgramType.class);
+    private EnumMap<NgramType, NgramStorage.ScoreStats> ngramScores = new EnumMap<>(NgramType.class);
 
-    public EnumMap<NgramType, Double> getNgramScores() {
+    public EnumMap<NgramType, NgramStorage.ScoreStats> getNgramScores() {
         return ngramScores;
     }
 
@@ -19,9 +21,14 @@ public class TextScore {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (Map.Entry<NgramType, Double> entry : ngramScores.entrySet()) {
+        for (Map.Entry<NgramType, NgramStorage.ScoreStats> entry : ngramScores.entrySet()) {
             if (entry.getValue() != null) {
-                sb.append(String.format("%s: %.5f ", entry.getKey(), entry.getValue()));
+                sb.append(String.format("%s: %.5f (min: %.5f max: %.5f total: %.0f found: %.0f)\n", entry.getKey(),
+                        entry.getValue().getScore(),
+                        entry.getValue().getMinScore(),
+                        entry.getValue().getMaxScore(),
+                        entry.getValue().getNgramsTotal(),
+                        entry.getValue().getNgramsFound()));
             }
         }
         return sb.toString();
