@@ -3,13 +3,8 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>matasano-challenges</groupId>
-        <artifactId>jmc</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
 
-    <groupId>matasano-challenges</groupId>
+    <groupId>nlp</groupId>
     <artifactId>textmeter</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -20,6 +15,30 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.0.1</version>
+			</plugin>
+		</plugins>
+    </reporting>
+
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+				  <source>1.7</source>
+				  <target>1.7</target>
+				</configuration>
+			</plugin>		
+		</plugins>
+    </build>
 
     <dependencies>
         <dependency>
