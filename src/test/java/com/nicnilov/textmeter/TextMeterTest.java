@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.Random;
 
 /**
  * Created as part of jmc project
@@ -54,7 +55,7 @@ public class TextMeterTest extends TestCase {
     public void setUp() throws Exception {
         textMeter = new TextMeter();
         textMeter.createTextLanguage("en");
-        //textMeter.createTextLanguage("ru");
+        textMeter.createTextLanguage("ru");
 
         TextLanguage en = textMeter.get("en");
         long mark = System.currentTimeMillis();
@@ -65,13 +66,13 @@ public class TextMeterTest extends TestCase {
         en.getNgram(NgramType.QUINTGRAM, loadResource(EN_QUINTGRAMS), NgramStorageStrategy.TREEMAP, 4354915);
         System.out.println(String.format("en finished: %d msec", System.currentTimeMillis() - mark));
 
-//        TextLanguage ru = textMeter.get("ru");
-//        mark = System.currentTimeMillis();
-//        ru.getNgram(NgramType.UNIGRAM, loadResource(RU_UNIGRAMS), NgramStorageStrategy.TREEMAP, 33);
-//        ru.getNgram(NgramType.BIGRAM, loadResource(RU_BIGRAMS), NgramStorageStrategy.TREEMAP, 1085);
-//        ru.getNgram(NgramType.TRIGRAM, loadResource(RU_TRIGRAMS), NgramStorageStrategy.TREEMAP, 29913);
-//        ru.getNgram(NgramType.QUADGRAM, loadResource(RU_QUADGRAMS), NgramStorageStrategy.TREEMAP, 440609);
-//        System.out.println(String.format("ru finished: %d msec", System.currentTimeMillis() - mark));
+        TextLanguage ru = textMeter.get("ru");
+        mark = System.currentTimeMillis();
+        ru.getNgram(NgramType.UNIGRAM, loadResource(RU_UNIGRAMS), NgramStorageStrategy.TREEMAP, 33);
+        ru.getNgram(NgramType.BIGRAM, loadResource(RU_BIGRAMS), NgramStorageStrategy.TREEMAP, 1085);
+        ru.getNgram(NgramType.TRIGRAM, loadResource(RU_TRIGRAMS), NgramStorageStrategy.TREEMAP, 29913);
+        ru.getNgram(NgramType.QUADGRAM, loadResource(RU_QUADGRAMS), NgramStorageStrategy.TREEMAP, 440609);
+        System.out.println(String.format("ru finished: %d msec", System.currentTimeMillis() - mark));
     }
 
     public void tearDown() {
@@ -79,7 +80,25 @@ public class TextMeterTest extends TestCase {
         textMeter = null;
     }
 
+    public String getRandomBinaryText(int length) {
+        byte[] result = new byte[length];
+        Random rg = new Random();
+        rg.nextBytes(result);
+        return new String(result);
+    }
+
+    public String getRandomCharacterText(final String chars, int length) {
+        char[] result = new char[length];
+        Random rg = new Random();
+        for (int i = 0; i < result.length; i++) {
+            result[i] = chars.charAt(rg.nextInt(chars.length() - 1));
+        }
+        return new String(result);
+    }
+
     public void testTextScore() throws Exception {
+        long mark = System.currentTimeMillis();
+
         TextScore textScore = textMeter.get("en").score(EN_TEXT.toUpperCase(Locale.ENGLISH));
         System.out.println("en-based score for english text:\n" + textScore);
 
@@ -92,17 +111,40 @@ public class TextMeterTest extends TestCase {
         String testString = new String(testArray);
         textScore = textMeter.get("en").score(testString);
         System.out.println("en-based score for non-natural text:\n" + textScore);
-        System.out.println(String.format("%s floor: %.7f number: %.0f", NgramType.QUADGRAM, textMeter.get("en").getNgram(NgramType.QUADGRAM).floor(), textMeter.get("en").getNgram(NgramType.QUADGRAM).totalFreq()));
+
+        testString = new String(getRandomBinaryText(2048)).toUpperCase();
+        textScore = textMeter.get("en").score(testString);
+        System.out.println("en-based score for random binary text:\n" + textScore);
+
+        testString = new String(getRandomCharacterText("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2048));
+        textScore = textMeter.get("en").score(testString);
+        System.out.println("en-based score for random character text:\n" + textScore);
+
+        System.out.println(String.format("%s floor: %.7f number: %.0f\n", NgramType.QUADGRAM, textMeter.get("en").getNgram(NgramType.QUADGRAM).floor(), textMeter.get("en").getNgram(NgramType.QUADGRAM).totalFreq()));
 
 
-//        textScore = textMeter.get("ru").score(EN_TEXT.toUpperCase(Locale.ENGLISH));
-//        System.out.println("ru-based score for english text: " + textScore);
-//
-//        textScore = textMeter.get("ru").score(RU_TEXT.toUpperCase());
-//        System.out.println("ru-based score for russian text: " + textScore);
-//
-//        textScore = textMeter.get("ru").score(testString);
-//        System.out.println("ru-based score for non-natural text: " + textScore);
+        textScore = textMeter.get("ru").score(EN_TEXT.toUpperCase(Locale.ENGLISH));
+        System.out.println("ru-based score for english text:\n" + textScore);
+
+        textScore = textMeter.get("ru").score(RU_TEXT.toUpperCase());
+        System.out.println("ru-based score for russian text:\n" + textScore);
+
+        testArray = new char[2048];
+        Arrays.fill(testArray, 'А');
+
+        testString = new String(testArray);
+        textScore = textMeter.get("ru").score(testString);
+        System.out.println("ru-based score for non-natural text:\n" + textScore);
+
+        testString = new String(getRandomBinaryText(2048)).toUpperCase();
+        textScore = textMeter.get("ru").score(testString);
+        System.out.println("ru-based score for random binary text:\n" + textScore);
+
+        testString = new String(getRandomCharacterText("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЭЬЭЮЯ", 2048));
+        textScore = textMeter.get("ru").score(testString);
+        System.out.println("ru-based score for random character text:\n" + textScore);
+
+        System.out.println(String.format("calc finished: %d msec", System.currentTimeMillis() - mark));
 
     }
 

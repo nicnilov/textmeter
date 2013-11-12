@@ -98,15 +98,16 @@ public abstract class NgramStorage {
         for (int i = 0; i <= cnt; i++) {
             ngramScore = storage.get(text.substring(i, ngramType.length() + i));
             if (ngramScore == null) {
-                scoreStats.score += floor;
+                //scoreStats.score += floor;
             } else {
                 scoreStats.ngramsFound++;
                 scoreStats.score += ngramScore;
             }
         }
 
-        scoreStats.maxScore = floor * scoreStats.ngramsFound;
         scoreStats.minScore = floor * scoreStats.ngramsTotal;
+
+        scoreStats.score = scoreStats.ngramsFound == 0 ? scoreStats.minScore : scoreStats.ngramsTotal * (scoreStats.score / scoreStats.ngramsFound);
         return scoreStats;
     }
 
@@ -134,7 +135,7 @@ public abstract class NgramStorage {
     public static class ScoreStats {
         private double score;
         private double minScore;
-        private double maxScore;
+//        private double calcScore;
         private double ngramsTotal;
         private double ngramsFound;
 
@@ -146,9 +147,9 @@ public abstract class NgramStorage {
             return minScore;
         }
 
-        public double getMaxScore() {
-            return maxScore;
-        }
+//        public double getCalcScore() {
+//            return calcScore;
+//        }
 
         public double getNgramsTotal() {
             return ngramsTotal;

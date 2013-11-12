@@ -23,10 +23,10 @@ public class TextScore {
 
         for (Map.Entry<NgramType, NgramStorage.ScoreStats> entry : ngramScores.entrySet()) {
             if (entry.getValue() != null) {
-                sb.append(String.format("%s: %.5f (min: %.5f max: %.5f total: %.0f found: %.0f)\n", entry.getKey(),
+                sb.append(String.format("%s: %.5f (min: %.5f total: %.0f found: %.0f)\n", entry.getKey(),
                         entry.getValue().getScore(),
                         entry.getValue().getMinScore(),
-                        entry.getValue().getMaxScore(),
+                        //entry.getValue().getCalcScore(),
                         entry.getValue().getNgramsTotal(),
                         entry.getValue().getNgramsFound()));
             }
