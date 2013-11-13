@@ -4,7 +4,7 @@ import com.nicnilov.textmeter.NotImplementedException;
 import com.nicnilov.textmeter.ngrams.NgramType;
 
 /**
- * Created as part of jmc project
+ * Created as part of textmeter project
  * by Nic Nilov on 26.10.13 at 0:22
  */
 public class NgramStorageFactory {

@@ -14,7 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Created as part of jmc project
+ * Created as part of textmeter project
  * by Nic Nilov on 25.10.13 at 23:19
  */
 public class TextLanguage {

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created as part of jmc project
+ * Created as part of textmeter project
  * by Nic Nilov on 26.10.13 at 0:12
  */
 public class NgramBuilder {

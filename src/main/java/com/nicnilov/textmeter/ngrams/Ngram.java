@@ -11,13 +11,15 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * Created as part of jmc project
+ * Created as part of textmeter project
  * by Nic Nilov on 25.10.13 at 23:20
  */
 public class Ngram {
 
     private NgramType ngramType;
     private NgramStorage ngramStorage;
+    private long volume;
+    private double floor;
 
     protected Ngram(NgramType ngramType, NgramStorageStrategy ngramStorageStrategy, int sizeHint) {
         this.ngramType = ngramType;
@@ -27,14 +29,19 @@ public class Ngram {
     protected Ngram load(InputStream inputStream) throws IOException, LineFormatException {
         if (ngramStorage == null) { throw new NotInitializedException(); }
 
-        this.ngramStorage.load(inputStream);
+        this.volume = this.ngramStorage.load(inputStream);
+
+        if (volume != 0) {
+            floor = Math.log10(0.01 / volume);
+        }
+
         calculateLogFrequences();
         return this;
     }
 
     protected void calculateLogFrequences() {
-        for (Map.Entry<String, Float> entry : storage.entrySet()) {
-            entry.setValue(new Float(Math.log10(entry.getValue() / totalNgrams)));
+        for (Map.Entry<String, Float> entry : ngramStorage) {
+            entry.setValue(new Float(Math.log10(entry.getValue() / volume)));
         }
     }
 
@@ -50,9 +57,7 @@ public class Ngram {
 
         for (int i = 0; i <= cnt; i++) {
             ngramScore = ngramStorage.get(text.substring(i, ngramType.length() + i));
-            if (ngramScore == null) {
-                //scoreStats.score += floor;
-            } else {
+            if (ngramScore != null) {
                 scoreStats.ngramsFound++;
                 scoreStats.score += ngramScore;
             }
@@ -62,32 +67,38 @@ public class Ngram {
 
         scoreStats.score = scoreStats.ngramsFound == 0 ? scoreStats.minScore : scoreStats.ngramsTotal * (scoreStats.score / scoreStats.ngramsFound);
         return scoreStats;
-
-
-        //return this.ngramStorage.score(text);
     }
 
-    public long size() {
-        return this.ngramStorage.ngramsCount();
+    public long count() {
+        return this.ngramStorage.count();
     }
 
-    public double totalFreq() {
-        return this.ngramStorage.totalNgrams();
+    public double volume() {
+        return this.volume;
     }
 
     public double floor() {
-        return this.ngramStorage.floor();
+        return floor;
     }
 
 
+//    public void dumpNgrams() throws FileNotFoundException, UnsupportedEncodingException {
+//        PrintWriter pw = new PrintWriter("d:/dump.txt", "UTF-8");
+//
+//        for (Map.Entry<String, Float> entry : storage.entrySet()) {
+//            pw.println(String.format("%s: %.5f", entry.getKey(), entry.getValue()));
+//        }
+//
+//        pw.close();
+//    }
+
     /**
-     * Created as part of jmc project
+     * Created as part of textmeter project
      * by Nic Nilov on 30.10.13 at 23:41
      */
     public static class ScoreStats {
         private double score;
         private double minScore;
-        //        private double calcScore;
         private double ngramsTotal;
         private double ngramsFound;
 
@@ -98,10 +109,6 @@ public class Ngram {
         public double getMinScore() {
             return minScore;
         }
-
-//        public double getCalcScore() {
-//            return calcScore;
-//        }
 
         public double getNgramsTotal() {
             return ngramsTotal;

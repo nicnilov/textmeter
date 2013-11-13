@@ -1,7 +1,7 @@
 package com.nicnilov.textmeter.ngrams;
 
 /**
- * Created as part of jmc project
+ * Created as part of textmeter project
  * by Nic Nilov on 07.10.13 at 16:06
  */
 public enum NgramType {

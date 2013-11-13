@@ -14,7 +14,7 @@ import java.util.MissingResourceException;
 import java.util.Random;
 
 /**
- * Created as part of jmc project
+ * Created as part of textmeter project
  * by Nic Nilov on 27.10.13 at 18:58
  */
 public class TextMeterTest extends TestCase {
@@ -91,7 +91,7 @@ public class TextMeterTest extends TestCase {
         char[] result = new char[length];
         Random rg = new Random();
         for (int i = 0; i < result.length; i++) {
-            result[i] = chars.charAt(rg.nextInt(chars.length() - 1));
+            result[i] = chars.charAt(rg.nextInt(chars.length()));
         }
         return new String(result);
     }
@@ -112,6 +112,10 @@ public class TextMeterTest extends TestCase {
         textScore = textMeter.get("en").score(testString);
         System.out.println("en-based score for non-natural text:\n" + textScore);
 
+        testString = new String(new char[512]).replace("\0", "TION");
+        textScore = textMeter.get("en").score(testString);
+        System.out.println("en-based score for max ngram:\n" + textScore);
+
         testString = new String(getRandomBinaryText(2048)).toUpperCase();
         textScore = textMeter.get("en").score(testString);
         System.out.println("en-based score for random binary text:\n" + textScore);
@@ -120,7 +124,9 @@ public class TextMeterTest extends TestCase {
         textScore = textMeter.get("en").score(testString);
         System.out.println("en-based score for random character text:\n" + textScore);
 
-        System.out.println(String.format("%s floor: %.7f number: %.0f\n", NgramType.QUADGRAM, textMeter.get("en").getNgram(NgramType.QUADGRAM).floor(), textMeter.get("en").getNgram(NgramType.QUADGRAM).totalFreq()));
+        System.out.println(String.format("%s floor: %.7f volume: %.0f\n", NgramType.QUADGRAM,
+                textMeter.get("en").getNgram(NgramType.QUADGRAM).floor(),
+                textMeter.get("en").getNgram(NgramType.QUADGRAM).volume()));
 
 
         textScore = textMeter.get("ru").score(EN_TEXT.toUpperCase(Locale.ENGLISH));
