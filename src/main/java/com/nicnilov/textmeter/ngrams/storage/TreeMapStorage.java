@@ -8,7 +8,7 @@ import java.util.TreeMap;
  * Created as part of textmeter project
  * by Nic Nilov on 27.10.13 at 1:22
  */
-class TreeMapStorage extends NgramStorage {
+final class TreeMapStorage extends NgramStorage {
 
     @Override
     public NgramStorageStrategy getStorageStrategy() {

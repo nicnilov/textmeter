@@ -23,7 +23,7 @@ public class NgramStorageTest extends TestCase {
 
     public void testStorageFactory() throws Exception {
         for (NgramType ngramType: NgramType.values()) {
-            NgramStorage ngramStorage = NgramStorageFactory.get(ngramType, NgramStorageStrategy.TREEMAP, 10);
+            NgramStorage ngramStorage = NgramStorageFactory.get(ngramType, NgramStorageStrategy.TREEMAP, 0);
             assert (ngramStorage.getNgramType() == ngramType);
             assert (ngramStorage.getStorageStrategy() == NgramStorageStrategy.TREEMAP);
         }
@@ -38,7 +38,7 @@ public class NgramStorageTest extends TestCase {
             } catch (NotImplementedException nie) {
                 continue;
             }
-            throw new Exception("Using non-implemented ARRAY storage strategy should throw an exception");
+            throw new AssertionError("Using non-implemented ARRAY storage strategy should throw an exception");
         }
     }
 

@@ -20,8 +20,6 @@ public abstract class NgramStorage implements Iterable<Map.Entry<String, Float>>
 
     protected AbstractMap<String, Float> storage;
 
-    //private NgramStorage() {}
-
     public abstract NgramStorageStrategy getStorageStrategy();
 
     protected NgramStorage(NgramType ngramType) {
