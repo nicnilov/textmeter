@@ -15,4 +15,8 @@ class HashMapStorage extends NgramStorage {
         this.storage = new HashMap<>(sizeHint < DEFAULT_SIZE_HINT ? DEFAULT_SIZE_HINT : sizeHint);
     }
 
+    @Override
+    public NgramStorageStrategy getStorageStrategy() {
+        return NgramStorageStrategy.HASHMAP;
+    }
 }

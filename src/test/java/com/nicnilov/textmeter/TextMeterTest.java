@@ -7,10 +7,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.Random;
 
 /**
@@ -18,17 +16,6 @@ import java.util.Random;
  * by Nic Nilov on 27.10.13 at 18:58
  */
 public class TextMeterTest extends TestCase {
-
-    private static final String EN_UNIGRAMS = "en/english_unigrams.txt";
-    private static final String EN_BIGRAMS = "en/english_bigrams.txt";
-    private static final String EN_TRIGRAMS = "en/english_trigrams.txt";
-    private static final String EN_QUADGRAMS = "en/english_quadgrams.txt";
-    private static final String EN_QUINTGRAMS = "en/english_quintgrams.txt";
-
-    private static final String RU_UNIGRAMS = "ru/russian_unigrams.txt";
-    private static final String RU_BIGRAMS = "ru/russian_bigrams.txt";
-    private static final String RU_TRIGRAMS = "ru/russian_trigrams.txt";
-    private static final String RU_QUADGRAMS = "ru/russian_quadgrams.txt";
 
     private static final String EN_TEXT = "In a departure from the style of traditional encyclopedias, Wikipedia is open to outside editing. This means that, with the exception of particularly sensitive and/or vandalism-prone pages that are \"protected\" to some degree,[25] the reader of an article can edit the text without needing approval, doing so with a registered account or even anonymously. Different language editions modify this policy to some extent; for example, only registered users may create a new article in the English edition.[26] No article is considered to be owned by its creator or any other editor, nor is it vetted by any recognized authority. Instead, editors are supposed to agree on the content and structure of articles by consensus.[27]\n" +
             ("By default, an edit to an article becomes available immediately, prior to any review. As such, an article may contain inaccuracies, ideological biases, or even patent nonsense, until or unless another editor corrects the problem. Different language editions, each under separate administrative control, are free to modify this policy. For example, the German Wikipedia maintains \"stable versions\" of articles,[28] which have passed certain reviews. Following the protracted trials and community discussion, the \"pending changes\" system was introduced to English Wikipedia in December 2012.[29] Under this system, new users' edits to certain controversial or vandalism-prone articles would be \"subject to review from an established Wikipedia editor before " +
@@ -44,14 +31,6 @@ public class TextMeterTest extends TestCase {
         return new TestSuite(TextMeterTest.class);
     }
 
-    private InputStream loadResource(String resourceName) {
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(resourceName);
-        if (is == null) {
-            throw new MissingResourceException("Could not load example resource", this.getClass().getName(), resourceName);
-        }
-        return is;
-    }
-
     public void setUp() throws Exception {
         textMeter = new TextMeter();
         textMeter.createTextLanguage("en");
@@ -59,20 +38,20 @@ public class TextMeterTest extends TestCase {
 
         TextLanguage en = textMeter.get("en");
         long mark = System.currentTimeMillis();
-        en.getNgram(NgramType.UNIGRAM, loadResource(EN_UNIGRAMS), NgramStorageStrategy.TREEMAP, 26);
-        en.getNgram(NgramType.BIGRAM, loadResource(EN_BIGRAMS), NgramStorageStrategy.TREEMAP, 676);
-        en.getNgram(NgramType.TRIGRAM, loadResource(EN_TRIGRAMS), NgramStorageStrategy.TREEMAP, 17556);
-        en.getNgram(NgramType.QUADGRAM, loadResource(EN_QUADGRAMS), NgramStorageStrategy.TREEMAP, 389373);
-        en.getNgram(NgramType.QUINTGRAM, loadResource(EN_QUINTGRAMS), NgramStorageStrategy.TREEMAP, 4354915);
-        System.out.println(String.format("en finished: %d msec", System.currentTimeMillis() - mark));
+        en.getNgram(NgramType.UNIGRAM, TestUtils.loadResource(this.getClass(), TestUtils.EN_UNIGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.EN_UNIGRAMS_EXCNT);
+        en.getNgram(NgramType.BIGRAM, TestUtils.loadResource(this.getClass(), TestUtils.EN_BIGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.EN_BIGRAMS_EXCNT);
+        en.getNgram(NgramType.TRIGRAM, TestUtils.loadResource(this.getClass(), TestUtils.EN_TRIGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.EN_TRIGRAMS_EXCNT);
+        en.getNgram(NgramType.QUADGRAM, TestUtils.loadResource(this.getClass(), TestUtils.EN_QUADGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.EN_QUADGRAMS_EXCNT);
+        en.getNgram(NgramType.QUINTGRAM, TestUtils.loadResource(this.getClass(), TestUtils.EN_QUINTGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.EN_QUINTGRAMS_EXCNT);
+        System.out.println(String.format("en ngrams loaded: %d msec", System.currentTimeMillis() - mark));
 
         TextLanguage ru = textMeter.get("ru");
         mark = System.currentTimeMillis();
-        ru.getNgram(NgramType.UNIGRAM, loadResource(RU_UNIGRAMS), NgramStorageStrategy.TREEMAP, 33);
-        ru.getNgram(NgramType.BIGRAM, loadResource(RU_BIGRAMS), NgramStorageStrategy.TREEMAP, 1085);
-        ru.getNgram(NgramType.TRIGRAM, loadResource(RU_TRIGRAMS), NgramStorageStrategy.TREEMAP, 29913);
-        ru.getNgram(NgramType.QUADGRAM, loadResource(RU_QUADGRAMS), NgramStorageStrategy.TREEMAP, 440609);
-        System.out.println(String.format("ru finished: %d msec", System.currentTimeMillis() - mark));
+        ru.getNgram(NgramType.UNIGRAM, TestUtils.loadResource(this.getClass(), TestUtils.RU_UNIGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.RU_UNIGRAMS_EXCNT);
+        ru.getNgram(NgramType.BIGRAM, TestUtils.loadResource(this.getClass(), TestUtils.RU_BIGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.RU_BIGRAMS_EXCNT);
+        ru.getNgram(NgramType.TRIGRAM, TestUtils.loadResource(this.getClass(), TestUtils.RU_TRIGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.RU_TRIGRAMS_EXCNT);
+        ru.getNgram(NgramType.QUADGRAM, TestUtils.loadResource(this.getClass(), TestUtils.RU_QUADGRAMS), NgramStorageStrategy.TREEMAP, TestUtils.RU_QUADGRAMS_EXCNT);
+        System.out.println(String.format("ru ngrams loaded: %d msec", System.currentTimeMillis() - mark));
     }
 
     public void tearDown() {
@@ -116,11 +95,11 @@ public class TextMeterTest extends TestCase {
         textScore = textMeter.get("en").score(testString);
         System.out.println("en-based score for max ngram:\n" + textScore);
 
-        testString = new String(getRandomBinaryText(2048)).toUpperCase();
+        testString = getRandomBinaryText(2048).toUpperCase();
         textScore = textMeter.get("en").score(testString);
         System.out.println("en-based score for random binary text:\n" + textScore);
 
-        testString = new String(getRandomCharacterText("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2048));
+        testString = getRandomCharacterText("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2048);
         textScore = textMeter.get("en").score(testString);
         System.out.println("en-based score for random character text:\n" + textScore);
 
@@ -142,11 +121,11 @@ public class TextMeterTest extends TestCase {
         textScore = textMeter.get("ru").score(testString);
         System.out.println("ru-based score for non-natural text:\n" + textScore);
 
-        testString = new String(getRandomBinaryText(2048)).toUpperCase();
+        testString = getRandomBinaryText(2048).toUpperCase();
         textScore = textMeter.get("ru").score(testString);
         System.out.println("ru-based score for random binary text:\n" + textScore);
 
-        testString = new String(getRandomCharacterText("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЭЬЭЮЯ", 2048));
+        testString = getRandomCharacterText("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЭЬЭЮЯ", 2048);
         textScore = textMeter.get("ru").score(testString);
         System.out.println("ru-based score for random character text:\n" + textScore);
 

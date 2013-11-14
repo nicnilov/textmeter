@@ -10,6 +10,11 @@ import java.util.TreeMap;
  */
 class TreeMapStorage extends NgramStorage {
 
+    @Override
+    public NgramStorageStrategy getStorageStrategy() {
+        return NgramStorageStrategy.TREEMAP;
+    }
+
     public TreeMapStorage(NgramType ngramType) {
         super(ngramType);
         this.storage = new TreeMap<>();
